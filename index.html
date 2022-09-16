@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>NEW REPORT MEMBER 777</title>
+    <script src="https://unpkg.com/vue@next"></script>
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/element-plus/dist/index.css"
+    />
+    <script src="https://unpkg.com/element-plus"></script>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai&family=IBM+Plex+Sans+Thai+Looped:wght@300;400;500;600&display=swap");
+
+      body {
+        font-size: 14px !important;
+        font-family: "IBM Plex Sans Thai", sans-serif;
+        width: 1300px;
+        max-width: 1300px;
+        min-width: 1300px;
+        font-weight: 500 !important;
+      }
+
+      #table {
+        border-collapse: collapse;
+        width: 100%;
+      }
+
+      #table td,
+      #table th {
+        border: 1px solid #ddd;
+        padding: 2px;
+      }
+
+      #table tr:nth-child(even) {
+        background-color: #f2f2f2;
+      }
+
+      #table tr:hover {
+        background-color: #ddd;
+      }
+
+      #table th {
+        font-weight: bold;
+        text-align: center;
+        background-color: rgb(245, 245, 245);
+        color: #3a3a3a;
+      }
+
+      .text-right {
+        text-align: end;
+      }
+
+      .text-center {
+        text-align: center;
+      }
+
+      .text-danger {
+        color: #f56c6c;
+      }
+      .text-success {
+        color: #67c23a;
+      }
+      .text-dark {
+        color: #000000;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="app" class="container">
+      <el-row>
+        <el-col :span="22" :offset="0">
+          <div v-if="games.data" class="block" style="margin-bottom: 0.5rem">
+            <div style="margin-bottom: 0.5rem">
+              <div style="margin-bottom: 0.5rem; display: flex; width: 60%">
+                <input v-model="username" style="margin-right: 1rem" />
+
+                <el-date-picker
+                  v-model="datepicker"
+                  type="datetimerange"
+                  range-separator="-"
+                  start-placeholder="Start date"
+                  end-placeholder="End date"
+                  align="right"
+                  placeholder="เลือกช่วงวันที่"
+                  :disabled-date="disabledDate"
+                  format="DD-MM-YYYY HH:mm"
+                  :default-time="defaultTime"
+                  @calendar-change="change($event)"
+                >
+                </el-date-picker>
+
+                <el-row class="mb-4" style="margin-left: 0.5rem">
+                  <el-button @click="submitReport()" type="primary"
+                    >ยืนยัน</el-button
+                  >
+                </el-row>
+              </div>
+            </div>
+
+            <div style="margin-bottom: 0.5rem">
+              <el-radio-group
+                style="width: 80px"
+                v-for="value in games.data"
+                :key="value.id"
+                v-model="selected"
+                class="ml-4"
+              >
+                <el-radio :label="value.game" size="large"
+                  >{{value.game.toUpperCase()}}</el-radio
+                >
+              </el-radio-group>
+            </div>
+          </div>
+
+          <div v-if="tableData.length != 0">
+            <table id="table" style="margin-bottom: 0.5rem">
+              <tr>
+                <th rowspan="2">#</th>
+                <th rowspan="2">เมื่อ</th>
+                <th rowspan="2">Game</th>
+                <th rowspan="2">Turnover</th>
+                <th rowspan="2">Valid Amount</th>
+                <th colspan="3">Member</th>
+              </tr>
+
+              <tr>
+                <th>W/L</th>
+                <th>Com</th>
+                <th>Total</th>
+              </tr>
+
+              <tr v-for="(data, index) in tableData" :key="data.id">
+                <td class="text-center">{{ index+1 }}</td>
+                <td class="text-center">{{ data.bettime }}</td>
+                <td>{{data.provider}} | {{data.ref}} | {{data.type}}</td>
+                <td class="text-right">{{formatMoney(data.turnover)}}</td>
+                <td class="text-right">{{formatMoney(data.valid_amount)}}</td>
+
+                <td
+                  class="text-right"
+                  :class="[data.winloss == 0 ? 'text-dark' : data.winloss < 0 ? 'text-danger' : 'text-success']"
+                >
+                  {{formatMoney(data.winloss)}}
+                </td>
+                <td
+                  class="text-right"
+                  :class="[data.commission == 0 ? 'text-dark' : data.commission < 0 ? 'text-danger' : 'text-success']"
+                >
+                  {{formatMoney(data.commission)}}
+                </td>
+                <td
+                  class="text-right"
+                  :class="[data.total == 0 ? 'text-dark' : data.total < 0 ? 'text-danger' : 'text-success']"
+                >
+                  {{formatMoney(data.total)}}
+                </td>
+              </tr>
+            </table>
+          </div>
+
+          <div>{{msg}}</div>
+        </el-col>
+      </el-row>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.1/moment.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.27.2/axios.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment-timezone/0.5.23/moment-timezone-with-data-2012-2022.min.js"></script>
+
+    <script src="src/app.js"></script>
+  </body>
+</html>
