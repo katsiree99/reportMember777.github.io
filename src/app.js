@@ -88,8 +88,8 @@ const App = {
         // );
         let start = Math.floor(this.datepicker[0].getTime() / 1000);
         let end = Math.floor(this.datepicker[1].getTime() / 1000);
-        if (this.selected == "") {
-          this.selected = "all";
+        if (this.selected == "all" || this.selected == "") {
+          this.selected = "";
         }
         var data = JSON.stringify({
           username: this.username,
