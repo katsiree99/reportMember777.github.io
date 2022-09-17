@@ -8,6 +8,11 @@ const App = {
       games: [],
       username: "brgk880070953",
       msg: "",
+      total_winloss: "",
+      total_commission: "",
+      total_total: "",
+      total_valid_amount: "",
+      total_turnover: "",
     };
   },
   methods: {
@@ -70,32 +75,21 @@ const App = {
       let submit = true;
       this.tableData = [];
       this.msg = "";
+      let selected;
 
       if (submit) {
-        // let dateStart = moment
-        //   .tz(this.datepicker[0], "Asia/Hong_Kong")
-        //   .format("MM/DD/YYYY HH:00:00");
-        // const [dateValues, timeStar] = dateStart.split(" ");
-        // const [monthS, dayS, yearS] = dateValues.split("/");
-        // const [hoursS, minutesS, secondsS] = timeStar.split(":");
-        // dateStart = new Date(
-        //   +yearS,
-        //   monthS - 1,
-        //   +dayS,
-        //   +hoursS,
-        //   +minutesS,
-        //   +secondsS
-        // );
         let start = Math.floor(this.datepicker[0].getTime() / 1000);
         let end = Math.floor(this.datepicker[1].getTime() / 1000);
         if (this.selected == "all" || this.selected == "") {
-          this.selected = "";
+          selected = "";
+        } else {
+          selected = this.selected;
         }
         var data = JSON.stringify({
           username: this.username,
           start: start,
           end: end,
-          provider: this.selected,
+          provider: selected,
         });
 
         await axios({
@@ -108,6 +102,24 @@ const App = {
         }).then((response) => {
           if (response.data.length != 0) {
             this.tableData = response.data;
+
+            let winloss = 0;
+            let commission = 0;
+            let total = 0;
+            let turnover = 0;
+            let valid_amount = 0;
+            this.tableData.forEach((element) => {
+              turnover += parseFloat(element.turnover);
+              valid_amount += parseFloat(element.valid_amount);
+              winloss += parseFloat(element.winloss);
+              commission += parseFloat(element.commission);
+              total += parseFloat(element.total);
+            });
+            this.total_winloss = winloss;
+            this.total_commission = commission;
+            this.total_total = total;
+            this.total_turnover = turnover;
+            this.total_valid_amount = valid_amount;
           } else {
             this.msg = "ไม่พบรายการ";
           }
