@@ -1,4 +1,4 @@
-let api_url = "http://18.143.182.58:5000/";
+let api_url = "http://18.143.182.58/";
 const App = {
   data() {
     return {
