@@ -1,4 +1,4 @@
-let api_url = "http://18.143.182.58/";
+let api_url = "https://brgk.b777.win/";
 const App = {
   data() {
     return {
